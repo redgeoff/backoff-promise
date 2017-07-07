@@ -1,6 +1,7 @@
 'use strict';
 
-var sporks = require('sporks');
+var sporks = require('sporks'),
+  Promise = require('sporks/scripts/promise');
 
 // Simple way to implement an exponential backoff with promises
 var Backoff = function (startingRetryAfterMSecs, maxRetryAfterMSecs, backoffFactor) {
