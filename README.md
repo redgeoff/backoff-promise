@@ -3,7 +3,7 @@
 Seed your JS project
 
 
-# Example 1
+## Example 1
 
     var i = 0,
       Backoff = require('backoff-promise'),
@@ -24,7 +24,7 @@ Seed your JS project
     });
 
 
-# Example 2: Different types of errors
+## Example 2: Different types of errors
 
     var i = 0,
       Backoff = require('backoff-promise'),
