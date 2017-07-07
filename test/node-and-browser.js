@@ -111,4 +111,40 @@ describe('backoff', function () {
     });
   });
 
+  it('should attempt', function () {
+    var i = 0,
+      hasPermanentError = false;
+
+    var myPromise = function () {
+      return new Promise(function (resolve, reject) {
+        if (i++ < 3) {
+          reject(new Error('transient-error'));
+        } else {
+          reject(new Error('permanent-error'));
+        }
+      });
+    };
+
+    var run = function (promiseFactory) {
+      return backoff.attempt(promiseFactory).catch(function (err) {
+        // Run again?
+        if (err.message === 'transient-error') {
+          return run(promiseFactory);
+        } else if (err.message === 'permanent-error') {
+          // Permanent error, so stop
+          throw err;
+        }
+      });
+    };
+
+    return run(function () {
+      return myPromise();
+    }).catch(function (err) {
+      err.message.should.eql('permanent-error');
+      hasPermanentError = true;
+    }).then(function () {
+      hasPermanentError.should.eql(true);
+    });
+  });
+
 });
