@@ -1,8 +1,6 @@
 # backoff-promise
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/redgeoff/backoff-promise.svg)](https://greenkeeper.io/)
-
-[![Circle CI](https://circleci.com/gh/redgeoff/backoff-promise.svg?style=svg&circle-token=fc3a5ff9f39a7bcfc2fde7002a602cfe7e37a6d6)](https://circleci.com/gh/redgeoff/backoff-promise)
+[![Greenkeeper badge](https://badges.greenkeeper.io/redgeoff/backoff-promise.svg)](https://greenkeeper.io/) [![Circle CI](https://circleci.com/gh/redgeoff/backoff-promise.svg?style=svg&circle-token=fc3a5ff9f39a7bcfc2fde7002a602cfe7e37a6d6)](https://circleci.com/gh/redgeoff/backoff-promise)
 
 Seed your JS project
 
