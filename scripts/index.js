@@ -62,7 +62,7 @@ Backoff.prototype.attempt = function (promiseFactory) {
 
 Backoff.prototype.run = function (promiseFactory) {
   var self = this;
-  return self.attempt(promiseFactory).catch(function (err) {
+  return self.attempt(promiseFactory).catch(function (/* err */) {
     return self.run(promiseFactory);
   });
 };

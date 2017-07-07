@@ -68,7 +68,6 @@ describe('backoff', function () {
     };
 
     var run = function (promiseFactory) {
-      var self = this;
       return backoff.attempt(promiseFactory).catch(function (err) {
         // Run again?
         if (err.message === 'transient-error') {
@@ -91,8 +90,7 @@ describe('backoff', function () {
   });
 
   it('should run and backoff', function () {
-    var d1 = new Date(),
-      i = 0,
+    var i = 0,
       retryAfterMSecs = startingRetryAfterMSecs,
       n = 0;
 
