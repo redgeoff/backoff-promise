@@ -1,9 +1,11 @@
 # backoff-promise
 
+[![Circle CI](https://circleci.com/gh/redgeoff/backoff-promise.svg?style=svg&circle-token=fc3a5ff9f39a7bcfc2fde7002a602cfe7e37a6d6)](https://circleci.com/gh/redgeoff/backoff-promise)
+
 Seed your JS project
 
 
-# Example 1
+## Example 1
 
     var i = 0,
       Backoff = require('backoff-promise'),
@@ -24,7 +26,7 @@ Seed your JS project
     });
 
 
-# Example 2: Different types of errors
+## Example 2: Different types of errors
 
     var i = 0,
       Backoff = require('backoff-promise'),
@@ -40,21 +42,15 @@ Seed your JS project
       });
     };
 
-    var run = function (promiseFactory) {
-      var self = this;
-      return backoff.attempt(promiseFactory).catch(function (err) {
-        // Run again?
-        if (err.message === 'transient-error') {
-          return run(promiseFactory);
-        } else if (err.message === 'permanent-error') {
-          // Permanent error, so stop
-          throw err;
-        }
-      });
+    var shouldRetry = function (err) {
+      // Permanent error? If so, then stop retrying
+      if (err.message === 'permanent-error') {
+        throw err;
+      }
     };
 
-    return run(function () {
+    return backoff.run(function () {
       return myPromise();
-    }).catch(function (err) {
+    }, shouldRetry).catch(function (err) {
       // err.message = 'transient-error'
     });

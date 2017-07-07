@@ -67,22 +67,16 @@ describe('backoff', function () {
       });
     };
 
-    var run = function (promiseFactory) {
-      var self = this;
-      return backoff.attempt(promiseFactory).catch(function (err) {
-        // Run again?
-        if (err.message === 'transient-error') {
-          return run(promiseFactory);
-        } else if (err.message === 'permanent-error') {
-          // Permanent error, so stop
-          throw err;
-        }
-      });
+    var shouldRetry = function (err) {
+      // Permanent error? If so, then stop retrying
+      if (err.message === 'permanent-error') {
+        throw err;
+      }
     };
 
-    return run(function () {
+    return backoff.run(function () {
       return myPromise();
-    }).catch(function (err) {
+    }, shouldRetry).catch(function (err) {
       err.message.should.eql('permanent-error');
       hasPermanentError = true;
     }).then(function () {
@@ -91,8 +85,7 @@ describe('backoff', function () {
   });
 
   it('should run and backoff', function () {
-    var d1 = new Date(),
-      i = 0,
+    var i = 0,
       retryAfterMSecs = startingRetryAfterMSecs,
       n = 0;
 
@@ -115,6 +108,42 @@ describe('backoff', function () {
     }).then(function () {
       // Make sure that we aren't considering other errors
       n.should.eql(5);
+    });
+  });
+
+  it('should attempt', function () {
+    var i = 0,
+      hasPermanentError = false;
+
+    var myPromise = function () {
+      return new Promise(function (resolve, reject) {
+        if (i++ < 3) {
+          reject(new Error('transient-error'));
+        } else {
+          reject(new Error('permanent-error'));
+        }
+      });
+    };
+
+    var run = function (promiseFactory) {
+      return backoff.attempt(promiseFactory).catch(function (err) {
+        // Run again?
+        if (err.message === 'transient-error') {
+          return run(promiseFactory);
+        } else if (err.message === 'permanent-error') {
+          // Permanent error, so stop
+          throw err;
+        }
+      });
+    };
+
+    return run(function () {
+      return myPromise();
+    }).catch(function (err) {
+      err.message.should.eql('permanent-error');
+      hasPermanentError = true;
+    }).then(function () {
+      hasPermanentError.should.eql(true);
     });
   });
 
