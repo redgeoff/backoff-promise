@@ -67,21 +67,16 @@ describe('backoff', function () {
       });
     };
 
-    var run = function (promiseFactory) {
-      return backoff.attempt(promiseFactory).catch(function (err) {
-        // Run again?
-        if (err.message === 'transient-error') {
-          return run(promiseFactory);
-        } else if (err.message === 'permanent-error') {
-          // Permanent error, so stop
-          throw err;
-        }
-      });
+    var shouldRetry = function (err) {
+      // Permanent error? If so, then stop retrying
+      if (err.message === 'permanent-error') {
+        throw err;
+      }
     };
 
-    return run(function () {
+    return backoff.run(function () {
       return myPromise();
-    }).catch(function (err) {
+    }, shouldRetry).catch(function (err) {
       err.message.should.eql('permanent-error');
       hasPermanentError = true;
     }).then(function () {

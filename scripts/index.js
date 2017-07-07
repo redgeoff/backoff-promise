@@ -60,10 +60,16 @@ Backoff.prototype.attempt = function (promiseFactory) {
   });
 };
 
-Backoff.prototype.run = function (promiseFactory) {
+Backoff.prototype.run = function (promiseFactory, shouldRetry) {
   var self = this;
-  return self.attempt(promiseFactory).catch(function (/* err */) {
-    return self.run(promiseFactory);
+  return self.attempt(promiseFactory).catch(function (err) {
+    return Promise.resolve().then(function () {
+      if (shouldRetry) {
+        return shouldRetry(err);
+      }
+    }).then(function () {
+      return self.run(promiseFactory, shouldRetry);
+    });
   });
 };
 
