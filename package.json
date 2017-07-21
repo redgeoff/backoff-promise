@@ -53,6 +53,7 @@
   },
   "greenkeeper": {
     "ignore": [
+      "chai",
       "chai-as-promised"
     ]
   }
