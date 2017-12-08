@@ -1,20 +1,24 @@
 # Doesn't actually work!
 # node:
-#  version: 6.9.2
+#  version: 8.1.4
+
+machine:
+  environment:
+    NODE_VERSION: 8.1.4
 
 dependencies:
   pre:
-    - nvm install 6.9.2
+    - nvm install $NODE_VERSION
 
   override:
-    - nvm use 6.9.2 && npm install
+    - nvm use $NODE_VERSION && npm install
 
 test:
   pre:
-    - nvm use 6.9.2 && npm run assert-beautified
-    - nvm use 6.9.2 && npm run jshint
+    - nvm use $NODE_VERSION && npm run assert-beautified
+    - nvm use $NODE_VERSION && npm run jshint
 
   override:
-    - nvm use 6.9.2 && npm run node-full-test
-    - nvm use 6.9.2 && npm run browser-test-phantomjs
-    - nvm use 6.9.2 && npm run browser-coverage-full-test
+    - nvm use $NODE_VERSION && npm run node-full-test
+    - nvm use $NODE_VERSION && npm run browser-test-phantomjs
+    - nvm use $NODE_VERSION && npm run browser-coverage-full-test
