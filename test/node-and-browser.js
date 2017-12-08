@@ -14,7 +14,8 @@ describe('backoff', function () {
 
   beforeEach(function () {
     // Override default attributes to allow for faster execution
-    backoff = new Backoff(startingRetryAfterMSecs, maxRetryAfterMSecs, backoffFactor, maxRetries);
+    backoff = new Backoff(startingRetryAfterMSecs, maxRetryAfterMSecs, backoffFactor,
+      maxRetries);
   });
 
   it('should handle success', function () {
