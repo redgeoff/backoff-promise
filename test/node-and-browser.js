@@ -9,11 +9,12 @@ describe('backoff', function () {
   var backoff = null,
     startingRetryAfterMSecs = 10,
     maxRetryAfterMSecs = 30,
-    backoffFactor = 1.2;
+    backoffFactor = 1.2,
+    maxRetries = 10;
 
   beforeEach(function () {
     // Override default attributes to allow for faster execution
-    backoff = new Backoff(startingRetryAfterMSecs, maxRetryAfterMSecs, backoffFactor);
+    backoff = new Backoff(startingRetryAfterMSecs, maxRetryAfterMSecs, backoffFactor, maxRetries);
   });
 
   it('should handle success', function () {
@@ -144,6 +145,26 @@ describe('backoff', function () {
       hasPermanentError = true;
     }).then(function () {
       hasPermanentError.should.eql(true);
+    });
+  });
+
+  it('should throw if reaches max retries', function () {
+    var i = 0,
+      err = new Error('error');
+
+    var myPromise = function () {
+      return new Promise(function (resolve, reject) {
+        i++;
+        reject(err);
+      });
+    };
+
+    return sporks.shouldThrow(function () {
+      return backoff.run(function () {
+        return myPromise();
+      });
+    }, err).then(function () {
+      i.should.eql(maxRetries);
     });
   });
 
