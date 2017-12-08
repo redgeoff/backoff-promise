@@ -109,6 +109,10 @@ describe('backoff', function () {
     }).then(function () {
       // Make sure that we aren't considering other errors
       n.should.eql(5);
+
+      // Make sure that _init() was called after the successful attempt
+      backoff._retryAfterMSecs.should.eql(0);
+      backoff.retries.should.eql(0);
     });
   });
 
