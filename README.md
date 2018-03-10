@@ -58,3 +58,9 @@ return backoff.run(function () {
   // err.message = 'transient-error'
 });
 ```
+
+## API
+
+```
+var backoff = Backoff(startingRetryAfterMSecs, maxRetryAfterMSecs, backoffFactor, maxRetries)
+```
