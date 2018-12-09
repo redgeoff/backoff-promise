@@ -1,6 +1,6 @@
 {
   "name": "backoff-promise",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "An exponential backoff for promises",
   "main": "index.js",
   "repository": {
